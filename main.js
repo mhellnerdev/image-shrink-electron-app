@@ -1,5 +1,12 @@
 const { app, BrowserWindow } = require('electron')
 
+// Set env
+process.env.NODE_ENV = 'development'
+// variable of which env
+const isDev = process.env.NODE_ENV !== 'production' ? true : false
+// check if mac osx
+const isMac = process.platform === 'darwin' ? true : false
+
 let mainWindow
 
 function createMainWindow() {
