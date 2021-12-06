@@ -1,0 +1,14 @@
+{
+  "name": "image-shrink",
+  "version": "1.0.0",
+  "description": "app to optimize images",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Mark Hellner",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^16.0.4"
+  }
+}
