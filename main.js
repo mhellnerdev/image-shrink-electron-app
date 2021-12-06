@@ -12,10 +12,11 @@ const imagemin = require('imagemin')
 const imageminMozjpeg = require('imagemin-mozjpeg')
 const imageminPngquant = require('imagemin-pngquant')
 const slash = require('slash')
+const log = require('electron-log')
 
 // Set env
 // =========================================
-process.env.NODE_ENV = 'development'
+process.env.NODE_ENV = 'production'
 // variable of which env
 const isDev = process.env.NODE_ENV !== 'production' ? true : false
 // check if mac osx
@@ -57,6 +58,7 @@ function createAboutWindow() {
   })
 
   aboutWindow.loadFile(`${__dirname}/app/about.html`)
+  aboutWindow.setMenuBarVisibility(false)
 }
 
 app.on('ready', () => {
@@ -142,13 +144,13 @@ async function shrinkImage({ imgPath, quality, dest }) {
       ],
     })
 
-    console.log(files)
+    log.info(files)
 
     shell.openPath(dest)
 
     mainWindow.webContents.send('image:done')
   } catch (err) {
-    console.log(err)
+    log.error(err)
   }
 }
 
