@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, Menu } = require('electron')
 
 // Set env
 // =========================================
@@ -20,11 +20,31 @@ function createMainWindow() {
     resizable: isDev,
   })
 
-  // mainWindow.loadURL(`file://${__dirname}/app/index.html`) // Commented out for use of .loadFile function below
   mainWindow.loadFile(`${__dirname}/app/index.html`)
 }
 
-app.on('ready', createMainWindow)
+app.on('ready', () => {
+  createMainWindow()
+
+  // setup menus from menu array
+  const mainMenu = Menu.buildFromTemplate(menu)
+  Menu.setApplicationMenu(mainMenu)
+
+  mainWindow.on('closed', () => (mainWindow = null))
+})
+
+// setup top dianlog menu arrays
+const menu = [
+  {
+    label: 'File',
+    submenu: [
+      {
+        label: 'Quit',
+        click: () => app.quit(),
+      },
+    ],
+  },
+]
 
 // on mac osx keeps closed application from quitting which is typical of what you expect on OSX
 // =========================================
