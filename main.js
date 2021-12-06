@@ -20,6 +20,10 @@ function createMainWindow() {
     icon: `${__dirname}/assets/icons/Icon_256x256.png`,
     resizable: isDev,
     backgroundColor: 'gray',
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
   })
 
   mainWindow.loadFile(`${__dirname}/app/index.html`)
