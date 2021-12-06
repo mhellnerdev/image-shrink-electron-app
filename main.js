@@ -35,6 +35,10 @@ app.on('ready', () => {
 
 // setup top dianlog menu arrays
 const menu = [
+  // make sure all basic mac osx menu items are included in the "file" menu
+  // note: roles are predefined menu sets
+  ...(isMac ? [{ role: 'appMenu' }] : []),
+  // build menu
   {
     label: 'File',
     submenu: [
