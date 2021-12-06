@@ -1,4 +1,10 @@
-const { app, BrowserWindow, Menu, globalShortcut } = require('electron')
+const {
+  app,
+  BrowserWindow,
+  Menu,
+  globalShortcut,
+  ipcMain,
+} = require('electron')
 
 // Set env
 // =========================================
@@ -110,6 +116,10 @@ const menu = [
       ]
     : []),
 ]
+
+ipcMain.on('image:minimize', (e, options) => {
+  console.log(options)
+})
 
 // on mac osx keeps closed application from quitting which is typical of what you expect on OSX
 // =========================================
