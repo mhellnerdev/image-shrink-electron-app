@@ -10,6 +10,7 @@ const isMac = process.platform === 'darwin' ? true : false
 // =========================================
 
 let mainWindow
+let aboutWindow
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({
@@ -18,9 +19,23 @@ function createMainWindow() {
     height: 600,
     icon: `${__dirname}/assets/icons/Icon_256x256.png`,
     resizable: isDev,
+    backgroundColor: 'gray',
   })
 
   mainWindow.loadFile(`${__dirname}/app/index.html`)
+}
+
+function createAboutWindow() {
+  aboutWindow = new BrowserWindow({
+    title: 'About ImageShrink',
+    width: 300,
+    height: 300,
+    icon: `${__dirname}/assets/icons/Icon_256x256.png`,
+    resizable: false,
+    backgroundColor: 'white',
+  })
+
+  aboutWindow.loadFile(`${__dirname}/app/about.html`)
 }
 
 app.on('ready', () => {
@@ -30,10 +45,11 @@ app.on('ready', () => {
   const mainMenu = Menu.buildFromTemplate(menu)
   Menu.setApplicationMenu(mainMenu)
 
-  globalShortcut.register('CmdOrCtrl+R', () => mainWindow.reload())
-  globalShortcut.register(isMac ? 'Command+Alt+I' : 'Ctrl+Shift+I', () =>
-    mainWindow.toggleDevTools()
-  )
+  // global shortcuts below can be commented out due to the roles being brought into the menu object
+  // globalShortcut.register('CmdOrCtrl+R', () => mainWindow.reload())
+  // globalShortcut.register(isMac ? 'Command+Alt+I' : 'Ctrl+Shift+I', () =>
+  //   mainWindow.toggleDevTools()
+  // )
 
   mainWindow.on('closed', () => (mainWindow = null))
 })
@@ -42,20 +58,49 @@ app.on('ready', () => {
 const menu = [
   // make sure all basic mac osx menu items are included in the "file" menu
   // note: roles are predefined menu sets
-  ...(isMac ? [{ role: 'appMenu' }] : []),
+  ...(isMac
+    ? [
+        {
+          label: app.name,
+          submenu: [
+            {
+              label: 'About',
+              click: createAboutWindow,
+            },
+          ],
+        },
+      ]
+    : []),
   // build menu
   {
-    label: 'File',
-    submenu: [
-      {
-        label: 'Quit',
-        // accelerator: isMac ? 'Command + W' : 'Ctrl+W',
-        accelerator: 'CmdOrCtrl+W',
-
-        click: () => app.quit(),
-      },
-    ],
+    role: 'fileMenu',
   },
+  ...(!isMac
+    ? [
+        {
+          label: 'Help',
+          submenu: [
+            {
+              label: 'About',
+              click: createAboutWindow,
+            },
+          ],
+        },
+      ]
+    : []),
+  ...(isDev
+    ? [
+        {
+          label: 'Developer',
+          submenu: [
+            { role: 'reload' },
+            { role: 'forcereload' },
+            { type: 'separator' },
+            { role: 'toggledevtools' },
+          ],
+        },
+      ]
+    : []),
 ]
 
 // on mac osx keeps closed application from quitting which is typical of what you expect on OSX
